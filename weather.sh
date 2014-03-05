@@ -1,4 +1,9 @@
 #!/bin/bash
-wget -t 1 http://www.gismeteo.by/weather-minsk-4248/ 
-grep -e a{2-3} index.html
-rm index.html
+. $PWD/weather.conf
+while true; do
+	wget -t 1 -O $TEMP_FILE -o $TEMP_LOG $SOURCE
+	grep -Po '(?<=<div class="b-thermometer__now">)([^</div>]*)' index.html | awk '{print $1}' 
+	rm $TEMP_FILE
+	rm $TEMP_LOG
+	sleep $DELAY_TIME
+done
